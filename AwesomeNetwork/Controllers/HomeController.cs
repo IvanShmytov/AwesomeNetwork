@@ -9,23 +9,33 @@ using AwesomeNetwork.Models;
 using AwesomeNetwork.Data.UoW;
 using AutoMapper;
 using AwesomeNetwork.ViewModels.Account;
+using Microsoft.AspNetCore.Identity;
+using AwesomeNetwork.Models.Users;
 
 namespace AwesomeNetwork.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        private readonly SignInManager<User> _signInManager;
+        public HomeController(ILogger<HomeController> logger, SignInManager<User> signInManager)
         {
             _logger = logger;
+            _signInManager = signInManager;
         }
 
         [Route("")]
         [Route("[controller]/[action]")]
         public IActionResult Index()
         {
-            return View(new MainViewModel());
+            if (_signInManager.IsSignedIn(User))
+            {
+                return RedirectToAction("MyPage", "AccountManager");
+            }
+            else
+            {
+                return View(new MainViewModel());
+            }
         }
 
         [Route("[action]")]
