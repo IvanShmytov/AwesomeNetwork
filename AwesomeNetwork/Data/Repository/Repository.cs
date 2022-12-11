@@ -38,9 +38,9 @@ namespace AwesomeNetwork.Data.Repository
             return await Set.FindAsync(id);
         }
 
-        public IEnumerable<T> GetAll()
+        public async Task<IEnumerable<T>> GetAll()
         {
-            return Set;
+            return await Set.ToListAsync();
         }
 
         public async Task Update(T item)
